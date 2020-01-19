@@ -163,40 +163,13 @@ class MainActivity : AppCompatActivity() {
         // Indicate the game loop has begun
         connectStatus?.text = "Game Running"
 
-
         // Hide the Connection View Elements
         connectButton?.visibility = View.INVISIBLE
         startGame?.visibility = View.INVISIBLE
 
-        // Make the sensor readings visible
-        acceleration?.visibility = View.VISIBLE
-        orientation?.visibility = View.VISIBLE
-        accelerationLayout?.visibility = View.VISIBLE
-        orientationLayout?.visibility = View.VISIBLE
-
         // Enter the main game loop
         //val gameLoop = GameLoop(wearableDevice)
         Thread(gameLoop).start()
-
-
-//        var gameRunning = true
-//        while(gameRunning) {
-//
-////            orientations[0]?.text = "REEEE"
-//
-//            // Update the sensor display with sensor readings
-//            orientations[0]?.text = orientationQuaternion.x().toString()
-//            orientations[1]?.text = orientationQuaternion.y().toString()
-//            orientations[2]?.text = orientationQuaternion.z().toString()
-//            orientations[3]?.text = orientationQuaternion.w().toString()
-//
-//            accelerations[0]?.text = accelerometerVector.x().toString()
-//            accelerations[1]?.text = accelerometerVector.y().toString()
-//            accelerations[2]?.text = accelerometerVector.z().toString()
-//
-//            SystemClock.sleep(100)
-//            //gameRunning = false
-//        }
 
 
     }
