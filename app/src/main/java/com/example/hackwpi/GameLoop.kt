@@ -23,8 +23,9 @@ class GameLoop(val wearableDevice: WearableDevice, val context: Context) : Runna
 
     // Audio Stuff
     val gvrAudioEngine = GvrAudioEngine(context, GvrAudioEngine.RenderingMode.BINAURAL_HIGH_QUALITY)
-    val soundFile = "audio/water_drop2.ogg"
-    var sourceId = gvrAudioEngine.createSoundObject(soundFile)
+    val soundFile = "audio/water_drop.ogg"
+    val sourceId = gvrAudioEngine.createSoundObject(soundFile)
+    val introId = gvrAudioEngine.createSoundObject("audio/Intro.ogg")
     val targetPosition = arrayOf(25f, 45f, 0f)
 
     override fun run() {
@@ -61,13 +62,16 @@ class GameLoop(val wearableDevice: WearableDevice, val context: Context) : Runna
         audioSetup()
 
         var gameRunning = true
+
+        gvrAudioEngine.playSound(introId, true)
+
         while(gameRunning){
 
             Log.i("Accelerometer Vector:", accelerometerVector.toString())
             Log.i("Orientation Quaternion:", orientationQuaternion.toString())
 
             gvrAudioEngine.setHeadRotation(orientationQuaternion.x().toFloat(), orientationQuaternion.y().toFloat(), orientationQuaternion.z().toFloat(), orientationQuaternion.w().toFloat())
-            Thread.sleep(100)
+            Thread.sleep(10)
         }
     }
 
