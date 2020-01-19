@@ -27,40 +27,80 @@ class GameLoop(val wearableDevice: WearableDevice, val context: Context) : Runna
     var hasNod = false
 
 
-
     // Audio Stuff
     val gvrAudioEngine = GvrAudioEngine(context, GvrAudioEngine.RenderingMode.BINAURAL_HIGH_QUALITY)
-    val soundFile = "audio/water_drop.ogg"
+    val soundFile = "audio/water_drop_2.ogg"
     val sourceId = gvrAudioEngine.createSoundObject(soundFile)
-    val introId = gvrAudioEngine.createSoundObject("audio/narrator/audio-1.ogg")
     val targetPosition = arrayOf(25f, 45f, 0f)
+
+
+    val narratorAudioEngine = GvrAudioEngine(context, GvrAudioEngine.RenderingMode.BINAURAL_HIGH_QUALITY)
 
     override fun run() {
 
         // Create the sensor and gesture listeners
         createListeners()
 
+        // Setup Audio Playback Thread
+        Thread(Runnable {
+            gvrAudioEngine.preloadSoundFile(soundFile)
+            gvrAudioEngine.setSoundObjectPosition(sourceId, targetPosition[0], targetPosition[1], targetPosition[2])
+            gvrAudioEngine.playSound(sourceId, true)
+        }).start()
+        audioSetup()
 
+        // Create Audio Stuff
+        val narratorAudioIds = createNarratorAudio()
 
+        // Begin Game Sequence
+        Thread.sleep(500)
 
+        // I see you found my glasses
 
-        gvrAudioEngine.playSound(introId, false)
+//        narratorAudioIds.forEach {
+//
+//            narratorAudioEngine.playSound(it, false)
+//            Thread.sleep(500)
+//        }
+
+        narratorAudioEngine.playSound(narratorAudioIds[0], false)
+        Thread.sleep(4400)
+        narratorAudioEngine.playSound(narratorAudioIds[1], false)
+        Thread.sleep(2100)
+        narratorAudioEngine.playSound(narratorAudioIds[2], false)
+        Thread.sleep(5800)
+        narratorAudioEngine.playSound(narratorAudioIds[3], false)
+        Thread.sleep(2400)
+
+        // Wait for Nod gesture
+        while(hasNod == false){
+            Thread.sleep(50)
+        }
+        hasNod = false
+
+        narratorAudioEngine.playSound(narratorAudioIds[4], false)
+        Thread.sleep(1500)
 
 
 
         var gameRunning = true
-
-
         while(gameRunning){
-
-            Log.i("Accelerometer Vector:", accelerometerVector.toString())
-            Log.i("Orientation Quaternion:", orientationQuaternion.toString())
-
-            gvrAudioEngine.setHeadRotation(orientationQuaternion.x().toFloat(), orientationQuaternion.y().toFloat(), orientationQuaternion.z().toFloat(), orientationQuaternion.w().toFloat())
+            //Log.i("Accelerometer Vector:", accelerometerVector.toString())
+            //Log.i("Orientation Quaternion:", orientationQuaternion.toString())
             Thread.sleep(10)
         }
     }
 
+    private fun waitNarratorSound(audioId: Int) {
+        while(narratorAudioEngine.isSoundPlaying(audioId)) {
+            Log.i("Sound Wait State", narratorAudioEngine.isSoundPlaying(audioId).toString())
+            Thread.sleep(10)
+        }
+        Log.i("Sound Wait State", narratorAudioEngine.isSoundPlaying(audioId).toString())
+
+    }
+
+    // Creates and binds listeners for Bose AR devices
     private fun createListeners() {
 
         // Create a listener for sensor data
@@ -77,7 +117,7 @@ class GameLoop(val wearableDevice: WearableDevice, val context: Context) : Runna
                     }
                     SensorType.GAME_ROTATION_VECTOR -> {
                         orientationQuaternion = sensorValue.quaternion()!! //Lets hope this is never null
-                    }
+                        gvrAudioEngine.setHeadRotation(orientationQuaternion.x().toFloat(), orientationQuaternion.y().toFloat(), orientationQuaternion.z().toFloat(), orientationQuaternion.w().toFloat())                    }
                     else -> {} // Do Nothing
                 }
             }
@@ -101,14 +141,6 @@ class GameLoop(val wearableDevice: WearableDevice, val context: Context) : Runna
         wearableDevice.addListener(listener)
         wearableDevice.addListener(gestureListener)
 
-        // Setup Audio Playback Thread
-        Thread(Runnable {
-            gvrAudioEngine.preloadSoundFile(soundFile)
-            gvrAudioEngine.setSoundObjectPosition(sourceId, targetPosition[0], targetPosition[1], targetPosition[2])
-            gvrAudioEngine.playSound(sourceId, true)
-        }).start()
-        audioSetup()
-
         val config: GestureConfiguration = wearableDevice.gestureConfiguration()
             .disableAll()
             .gestureEnabled(GestureType.SINGLE_TAP, true)
@@ -117,6 +149,52 @@ class GameLoop(val wearableDevice: WearableDevice, val context: Context) : Runna
         wearableDevice.changeGestureConfiguration(config)
     }
 
+
+    private fun createNarratorAudio(): ArrayList<Int> {
+
+        // Set parameters for narrator voice
+        narratorAudioEngine.enableRoom(true)
+        narratorAudioEngine.setRoomProperties(50f, 50f, 50f, METAL, ACOUSTIC_CEILING_TILES, ACOUSTIC_CEILING_TILES)
+        narratorAudioEngine.setRoomReverbAdjustments(0.2f, 0.6f, 1f)
+        narratorAudioEngine.setHeadPosition(25f, 25f, 10f)
+        narratorAudioEngine.setHeadRotation(0.0f, 0.0f, 0.0f, 1.0f)
+        narratorAudioEngine.update()
+
+        // Load all of the narrators audio files
+        val narratorAudio = arrayOf(
+            "audio/narrator/audio-1.ogg",
+            "audio/narrator/audio-2.ogg",
+            "audio/narrator/audio-3.ogg",
+            "audio/narrator/audio-4.ogg",
+            "audio/narrator/audio-5.ogg",
+            "audio/narrator/audio-6.ogg",
+            "audio/narrator/audio-7.ogg",
+            "audio/narrator/audio-8.ogg",
+            "audio/narrator/audio-9.ogg",
+            "audio/narrator/audio-10.ogg",
+            "audio/narrator/audio-11.ogg",
+            "audio/narrator/audio-12.ogg",
+            "audio/narrator/audio-13.ogg",
+            "audio/narrator/audio-14.ogg",
+            "audio/narrator/audio-15.ogg",
+            "audio/narrator/audio-16.ogg"
+            )
+
+        val narratorAudioIds = ArrayList<Int>()
+
+        // Load all the narrator sounds
+        narratorAudio.forEach {
+            narratorAudioEngine.preloadSoundFile(it)
+            val soundId = narratorAudioEngine.createSoundObject(it)
+            narratorAudioEngine.setSoundObjectPosition(soundId, 25f, 15f, 10f)
+            narratorAudioEngine.setSoundVolume(soundId, 0.8f)
+            narratorAudioIds.add(soundId)
+        }
+
+        return narratorAudioIds
+    }
+
+    // Sets ups the parameters for the audio engines
     private fun audioSetup() {
         gvrAudioEngine.enableRoom(true)
         gvrAudioEngine.setRoomProperties(
