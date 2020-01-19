@@ -181,6 +181,10 @@ class GameLoop(val wearableDevice: WearableDevice, val context: Context) : Runna
         }
         hasTap = false
 
+        // Play the door creak noise
+        ambientAudioEngine.playSound(ambientAudioIds[0], false)
+        Thread.sleep(800)
+
         // Oops I guest that let's me out
         narratorAudioEngine.playSound(narratorAudioIds[13], false)
         Thread.sleep(3500)
@@ -244,10 +248,10 @@ class GameLoop(val wearableDevice: WearableDevice, val context: Context) : Runna
 
 
                             // Integrate the velocity data
-                            //positionX += velocityX * timestep
-                            //positionY += velocityY * timestep
+                            positionX += velocityX * timestep
+                            positionY += velocityY * timestep
 
-                            //ambientAudioEngine.setHeadPosition(positionX.toFloat(), positionX.toFloat(), 10f)
+                            ambientAudioEngine.setHeadPosition(positionX.toFloat(), positionX.toFloat(), 10f)
 
                             // Log.i("Velocity", "($velocityX, $velocityY)")
                             // Log.i("Position", "($positionX, $positionY)")
