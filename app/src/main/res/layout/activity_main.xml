@@ -20,14 +20,13 @@
 
     <Button
         android:id="@+id/startGame"
-        android:layout_width="187dp"
-        android:layout_height="137dp"
+        android:layout_width="200dp"
+        android:layout_height="140dp"
         android:onClick="startGameLoop"
         android:text="Start"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.468"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,11 +35,121 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Connect to the Frames"
+        android:textAlignment="center"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/connectButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.601" />
+
+    <TextView
+        android:id="@+id/acceleration"
+        android:layout_width="144dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="200dp"
+        android:rotation="0"
+        android:text="Acceleration"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/acceleration_layout"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/acceleration">
+
+        <TextView
+            android:id="@+id/accelX"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/accelY"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/accelZ"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/orientation"
+        android:layout_width="144dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="300dp"
+        android:rotation="0"
+        android:text="Orientation"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/orientation_layout"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/orientation">
+
+        <TextView
+            android:id="@+id/orientX"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/orientY"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/orientZ"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/orientW"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="0"
+            android:textAlignment="center" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
