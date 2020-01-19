@@ -3,7 +3,6 @@ package com.example.hackwpi
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.SystemClock
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -137,7 +136,7 @@ class MainActivity : AppCompatActivity() {
                 // Make the Start Game button Visible
                 startGame?.visibility = View.VISIBLE
 
-                gameLoop = GameLoop(wearableDevice)
+                gameLoop = GameLoop(wearableDevice, this)
 
             } else if (resultCode == DeviceConnectorActivity.RESULT_SCAN_ERROR) {
                 val scanError: ScanError = data!!.getSerializableExtra(DeviceConnectorActivity.FAILURE_REASON) as ScanError
