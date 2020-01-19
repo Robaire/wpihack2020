@@ -40,12 +40,7 @@ class MainActivity : AppCompatActivity() {
     var accelerations: Array<TextView?> = arrayOfNulls(3)
     var orientations: Array<TextView?> = arrayOfNulls(4)
 
-
-    // Global Values for Sensor Data
-    var accelerometerVector = Vector(0.0, 0.0, 0.0)
-    var orientationQuaternion = Quaternion(0.0, 0.0, 0.0, 1.0)
-
-    //
+    // Game Loop ojbect container
     var gameLoop: GameLoop? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
