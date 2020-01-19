@@ -3,6 +3,7 @@ package com.example.hackwpi
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -15,14 +16,12 @@ import com.bose.wearable.BoseWearable
 import com.bose.wearable.BoseWearableException
 import com.bose.wearable.sensordata.*
 import com.bose.wearable.sensordata.Vector
-import com.bose.wearable.services.wearablesensor.GestureType
-import com.bose.wearable.services.wearablesensor.SamplePeriod
-import com.bose.wearable.services.wearablesensor.SensorConfiguration
-import com.bose.wearable.services.wearablesensor.SensorType
+import com.bose.wearable.services.wearablesensor.*
 import com.bose.wearable.wearabledevice.BaseWearableDeviceListener
 import com.bose.wearable.wearabledevice.WearableDevice
 import com.bose.wearable.wearabledevice.WearableDeviceListener
 import java.util.*
+
 
 // This is the activity that is launched when the application is launched
 class MainActivity : AppCompatActivity() {
@@ -110,20 +109,31 @@ class MainActivity : AppCompatActivity() {
                     override fun onSensorConfigurationError(wearableException: BoseWearableException) {}
 
                     override fun onSensorDataRead(sensorValue: SensorValue) {
-                        when (sensorValue.sensorType()) {
-                            SensorType.ACCELEROMETER -> {
-                                accelerometerVector = sensorValue.vector() ?: Vector(0.0, 0.0, 0.0)
-                            }
-                            SensorType.GAME_ROTATION_VECTOR -> {
-                                orientationQuaternion = sensorValue.quaternion()!! //Lets hope this is never null
-                            }
-                            else -> {} // Do Nothing
-                        }
+//                        when (sensorValue.sensorType()) {
+//                            SensorType.ACCELEROMETER -> {
+//                                accelerometerVector = sensorValue.vector() ?: Vector(0.0, 0.0, 0.0)
+//                            }
+//                            SensorType.GAME_ROTATION_VECTOR -> {
+//                                orientationQuaternion = sensorValue.quaternion()!! //Lets hope this is never null
+//                            }
+//                            else -> {} // Do Nothing
+//                        }
+                    }
+                }
+
+                val gestureListener: WearableDeviceListener = object : BaseWearableDeviceListener() {
+                    override fun onGestureConfigurationRead(gestureConfiguration: GestureConfiguration) {}
+                    override fun onGestureConfigurationChanged(gestureConfiguration: GestureConfiguration) {}
+                    override fun onGestureConfigurationError(wearableException: BoseWearableException) {}
+
+                    override fun onGestureDataRead(gestureData: GestureData) {
+
                     }
                 }
 
                 // Bind the listener
                 wearableDevice.addListener(listener)
+                wearableDevice.addListener(gestureListener)
 
                 // Update the sensor settings
                 val samplePeriod: SamplePeriod = SamplePeriod._20_MS
@@ -133,9 +143,17 @@ class MainActivity : AppCompatActivity() {
                     .enableSensor(SensorType.GAME_ROTATION_VECTOR, samplePeriod)
                 wearableDevice.changeSensorConfiguration(configuration)
 
+                val config: GestureConfiguration = wearableDevice.gestureConfiguration()
+                    .disableAll()
+                    .gestureEnabled(GestureType.SINGLE_TAP, true)
+                    .gestureEnabled(GestureType.DOUBLE_TAP, true)
+                    .gestureEnabled(GestureType.HEAD_NOD, true)
+                wearableDevice.changeGestureConfiguration(config)
+
                 // Make the Start Game button Visible
                 startGame?.visibility = View.VISIBLE
 
+                // Create the game loop thread object
                 gameLoop = GameLoop(wearableDevice, this)
 
             } else if (resultCode == DeviceConnectorActivity.RESULT_SCAN_ERROR) {
@@ -169,8 +187,6 @@ class MainActivity : AppCompatActivity() {
         // Enter the main game loop
         //val gameLoop = GameLoop(wearableDevice)
         Thread(gameLoop).start()
-
-
     }
 
 
