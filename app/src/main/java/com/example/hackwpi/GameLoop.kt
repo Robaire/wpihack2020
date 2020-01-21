@@ -125,7 +125,6 @@ class GameLoop(val wearableDevice: WearableDevice, val context: Context) : Runna
         var startTime = System.currentTimeMillis()
         while(!(positionX < 55 && positionX > 40 && positionY > 40 && positionY < 55) && !hasTap){
             Thread.sleep(50)
-            Log.i("Time Difference", "${System.currentTimeMillis() - startTime}")
             if(System.currentTimeMillis() - startTime > 10000){
                 hasTap = true
             }
@@ -251,7 +250,7 @@ class GameLoop(val wearableDevice: WearableDevice, val context: Context) : Runna
                             positionX += velocityX * timestep
                             positionY += velocityY * timestep
 
-                            ambientAudioEngine.setHeadPosition(positionX.toFloat(), positionX.toFloat(), 10f)
+                            ambientAudioEngine.setHeadPosition(positionX.toFloat(), positionY.toFloat(), 10f)
 
                             // Log.i("Velocity", "($velocityX, $velocityY)")
                             // Log.i("Position", "($positionX, $positionY)")
